@@ -82,7 +82,7 @@ def validate_key():
     except Exception as e:
         return jsonify({"valid": False, "error": str(e)}), 500
 
-# === FITUR BARU: WEB TO CODE (SCRAPER) ===
+# === FITUR: WEB TO CODE (SCRAPER) ===
 @app.route('/api/web_to_code', methods=['POST'])
 def web_to_code():
     data = request.json
@@ -95,24 +95,53 @@ def web_to_code():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-# === FITUR BARU: SFL BYPASS ===
+# === FITUR: SFL BYPASS (VERSI UPGRADE) ===
 @app.route('/api/sfl_bypass', methods=['POST'])
 def sfl_bypass():
     data = request.json
     url = data.get('url')
     if not url: return jsonify({"status": "error", "message": "URL kosong"}), 400
+    
     try:
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
-        res = requests.get(url, headers=headers, timeout=10)
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.5',
+            'Referer': 'https://www.google.com/'
+        }
+        
+        # Ambil halaman (requests otomatis ngikutin redirect)
+        res = requests.get(url, headers=headers, timeout=15)
+        
+        # 1. Cek kalau URL akhirnya udah MediaFire (berhasil redirect)
+        if 'mediafire.com' in res.url:
+             return jsonify({"status": "success", "link": res.url})
+             
         html = res.text
-        # Cari link MediaFire
-        match = re.search(r'(https?://[^"\'\s]*mediafire\.com[^"\'\s]*)', html, re.IGNORECASE)
-        if match:
-            return jsonify({"status": "success", "link": match.group(1)})
-        else:
-            return jsonify({"status": "error", "message": "Link MediaFire tidak ditemukan di halaman tersebut."})
+        
+        # 2. Kumpulan Regex buat nyari link MediaFire di HTML atau JS
+        patterns = [
+            r'(https?://[^"\'\s]*mediafire\.com/file[^"\'\s]*)',
+            r'(https?://[^"\'\s]*mediafire\.com/download[^"\'\s]*)',
+            r'(https?://[^"\'\s]*mediafire\.com/\?[^"\'\s]*)',
+            r'window\.location\.href\s*=\s*["\']([^"\']*mediafire\.com[^"\']*)["\']',
+            r'<meta\s+http-equiv=["\']refresh["\']\s+content=["\']\d+;\s*url=([^"\']*mediafire\.com[^"\']*)["\']'
+        ]
+        
+        for pattern in patterns:
+            match = re.search(pattern, html, re.IGNORECASE)
+            if match:
+                link = match.group(1)
+                link = link.replace('\\/', '/') # Bersihin escape JS
+                return jsonify({"status": "success", "link": link})
+                
+        # 3. Kalau gak nemu sama sekali
+        return jsonify({"status": "error", "message": "Link MediaFire tidak ditemukan. Mungkin web pakai Cloudflare atau link SFL udah mati."})
+        
+    except requests.exceptions.RequestException as e:
+        return jsonify({"status": "error", "message": f"Koneksi ditolak: {str(e)}"}), 500
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return jsonify({"status": "error", "message": f"Error: {str(e)}"}), 500
 
 init_db()
 
