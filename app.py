@@ -7,18 +7,32 @@ import requests
 app = Flask(__name__)
 CORS(app)
 
-# === KONFIGURASI TURSO (UDAH DIISI OTOMATIS) ===
+# === KONFIGURASI TURSO ===
 TURSO_URL = "https://dulll-dull.aws-ap-southeast-1.turso.io"
 TURSO_TOKEN = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJleHAiOjE4MjU5NTgxNDAsImlhdCI6MTc5NDQyMjE0MCwiaWQiOiIwMWExY2I2Mi0yMjAxLTdlNjAtODM5NC01NTE1ZmY0YmIzNTAiLCJraWQiOiJEcnl5QVM3MGlIcVZ4YmZvcVkwcjhzaTRhcXUwQjlsVXhYbXl5X21oc1l3IiwicmlkIjoiMTYwMzczZjktOTg1MC00YWExLWJjOGQtMDU0ZDg1MDE4ZDJmIn0.ri6aHHSahAM3N23hUetTZN_bckNNbC9jaQHElGu5-Zws_Vsc2tXU6_IMXvkNRPOf4i3_UksLmourFOA_rngTDw"
+
+# Fungsi untuk mengubah argumen Python menjadi format tipe data Turso
+def _to_arg(v):
+    if v is None:
+        return {"type": "null"}
+    if isinstance(v, int):
+        return {"type": "integer", "value": str(v)}
+    if isinstance(v, float):
+        return {"type": "float", "value": v}
+    return {"type": "text", "value": str(v)}
 
 def execute_query(sql, args=None):
     headers = {
         "Authorization": f"Bearer {TURSO_TOKEN}",
         "Content-Type": "application/json"
     }
+    
+    # Format args sesuai standar Turso HTTP API
+    formatted_args = [_to_arg(a) for a in args] if args else []
+    
     payload = {
         "requests": [
-            {"type": "execute", "stmt": {"sql": sql, "args": args or []}},
+            {"type": "execute", "stmt": {"sql": sql, "args": formatted_args}},
             {"type": "close"}
         ]
     }
