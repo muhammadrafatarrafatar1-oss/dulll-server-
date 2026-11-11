@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Z×ice lanz dulll — Keygen & Bypass</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F4F4F0;
+    --black: #000000;
+    --white: #FFFFFF;
+    --yellow: #FFDE00;
+    --cyan: #00F0FF;
+    --pink: #FF007F;
+    --green: #00FF66;
+    --orange: #FF7A00;
+    --border: 3px solid #000;
+    --shadow: 4px 4px 0px #000;
+    --shadow-sm: 2px 2px 0px #000;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px);
+    background-size: 22px 22px;
+    color: var(--black);
+    display: flex; justify-content: center;
+    min-height: 100vh; padding: 20px 20px 110px 20px; /* Padding bawah dilebarin buat dock */
+    overflow-x: hidden;
+  }
+
+  .container { width: 100%; max-width: 460px; display: flex; flex-direction: column; gap: 20px; }
+
+  /* --- LOGIN SCREEN --- */
+  .login-overlay {
+    position: fixed; inset: 0; z-index: 99999;
+    background-color: var(--bg);
+    background-image: linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px);
+    background-size: 22px 22px;
+    display: flex; justify-content: center; align-items: center; padding: 20px;
+    transition: opacity 0.3s ease;
+  }
+  .login-overlay.hidden { opacity: 0; pointer-events: none; }
+  
+  .login-panel {
+    width: 100%; max-width: 400px; background: var(--white);
+    border: var(--border); box-shadow: var(--shadow); padding: 25px;
+    transform: rotate(1deg); display: flex; flex-direction: column; gap: 15px;
+  }
+  .login-title {
+    font-size: 22px; font-weight: 700; text-transform: uppercase; text-align: center;
+    border-bottom: 3px dashed var(--black); padding-bottom: 15px; margin-bottom: 5px;
+    color: var(--black);
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--yellow); border: var(--border); box-shadow: var(--shadow);
+    padding: 15px; text-align: center; transform: rotate(-1.2deg);
+    position: relative; margin-bottom: 5px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .header::before {
+    content: ""; position: absolute; inset: 0;
+    background: repeating-linear-gradient(45deg, rgba(0,0,0,0.05) 0 8px, transparent 8px 16px);
+    pointer-events: none;
+  }
+  .header h1 { font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #000; position: relative; }
+  .header p {
+    font-size: 11px; font-weight: 700; background: var(--black); color: var(--white);
+    display: inline-block; padding: 3px 10px; margin-top: 6px; letter-spacing: 1px;
+    position: relative;
+  }
+  .header .tag {
+    position: absolute; top: 6px; right: 8px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700;
+    background: var(--pink); color: #fff; padding: 2px 6px; border: 2px solid #000;
+    transform: rotate(6deg);
+  }
+
+  /* HAMBURGER */
+  .hamburger {
+    position: absolute; left: 15px;
+    background: #FFF; border: 2.5px solid #000; border-radius: 8px;
+    width: 35px; height: 35px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px;
+    cursor: pointer; box-shadow: 2px 2px 0px #000; transition: 0.1s; z-index: 10;
+  }
+  .hamburger:active { transform: translate(2px, 2px); box-shadow: none; }
+  .hamburger span { display: block; width: 18px; height: 3px; background: #000; border-radius: 2px; }
+
+  /* SIDE MENU */
+  .side-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 998; display: none; opacity: 0; transition: 0.3s; }
+  .side-overlay.active { display: block; opacity: 1; }
+  .side-menu {
+    position: fixed; top: 0; left: -320px; width: 270px; height: 100vh;
+    background: var(--bg); border-right: var(--border);
+    z-index: 999; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    padding: 20px; display: flex; flex-direction: column; gap: 10px;
+    background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px);
+    background-size: 18px 18px;
+    overflow-y: auto;
+  }
+  .side-menu.active { left: 0; }
+  
+  .side-title {
+    font-size: 18px; font-weight: 700; text-transform: uppercase;
+    border-bottom: 3px dashed var(--black); padding-bottom: 10px; margin-bottom: 6px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .side-title small { font-size: 9px; color: #666; font-family: 'JetBrains Mono', monospace; }
+  .close-x {
+    background: var(--pink); color: #fff; border: 2px solid #000; box-shadow: 2px 2px 0 #000;
+    width: 24px; height: 24px; font-weight: bold; font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .close-x:active { transform: translate(2px, 2px); box-shadow: none; }
+
+  .side-group-title {
+    font-size: 10px; font-family: 'JetBrains Mono', monospace; color: #666;
+    text-transform: uppercase; margin-top: 10px; margin-bottom: 2px; font-weight: 700;
+  }
+
+  .side-btn {
+    background: var(--white); border: var(--border); box-shadow: var(--shadow-sm);
+    padding: 12px; font-weight: 700; font-size: 13px; text-transform: uppercase;
+    cursor: pointer; transition: 0.1s; display: flex; align-items: center; gap: 10px; color: var(--black);
+    text-align: left;
+  }
+  .side-btn:active { transform: translate(2px, 2px); box-shadow: none; }
+  .side-btn.active { background: var(--cyan); }
+  .side-btn .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pink); border: 2px solid #000; flex-shrink: 0; }
+  .side-foot { margin-top: auto; font-size: 10px; font-family: 'JetBrains Mono', monospace; color: #666; line-height: 1.6; padding-top: 20px;}
+
+  /* PAGES */
+  .main-page { display: none; flex-direction: column; gap: 15px; width: 100%; }
+  .main-page.active { display: flex; animation: slideUp 0.3s ease; }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .panel { display: flex; background: var(--white); border: var(--border); box-shadow: var(--shadow); padding: 20px; flex-direction: column; gap: 15px; position: relative; }
+  
+  /* TOMBOL X DI SETIAP HALAMAN FITUR */
+  .close-page-btn {
+    position: absolute; top: 12px; right: 12px;
+    background: var(--pink); color: #fff; border: 2px solid #000;
+    width: 30px; height: 30px; border-radius: 4px;
+    font-weight: bold; font-size: 20px; display: flex;
+    align-items: center; justify-content: center; line-height: 1;
+    cursor: pointer; box-shadow: 2px 2px 0 #000; transition: 0.1s;
+    z-index: 20;
+  }
+  .close-page-btn:active { transform: translate(2px, 2px); box-shadow: none; }
+
+  .panel-title { font-size: 17px; font-weight: 700; border-bottom: 3px dashed var(--black); padding-bottom: 10px; display: flex; align-items: center; gap: 10px; color: var(--black); text-transform: uppercase; padding-right: 40px; }
+  .panel-title .badge { font-size: 9px; font-family: 'JetBrains Mono', monospace; background: var(--black); color: #fff; padding: 2px 6px; border-radius: 0; margin-left: auto; }
+  .panel-desc { font-size: 12px; font-weight: 500; color: #555; line-height: 1.5; }
+
+  .input-group { display: flex; flex-direction: column; gap: 5px; }
+  .input-group label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--black); letter-spacing: 0.5px;}
+  .input-brutal {
+    width: 100%; padding: 12px; border: var(--border); background: var(--bg); color: var(--black);
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; outline: none; transition: 0.2s;
+    scroll-margin-bottom: 120px;
+  }
+  .input-brutal:focus { background: var(--yellow); color: #000; box-shadow: var(--shadow-sm); transform: translate(-2px, -2px); }
+
+  .btn-action {
+    width: 100%; padding: 15px; border: var(--border); background: var(--pink); color: #FFF;
+    box-shadow: var(--shadow); font-size: 15px; font-weight: 700; text-transform: uppercase;
+    cursor: pointer; transition: 0.1s; letter-spacing: 0.5px;
+  }
+  .btn-action:active { transform: translate(4px, 4px); box-shadow: none; }
+  .btn-action:disabled { opacity: 0.6; cursor: wait; }
+  .btn-green { background: var(--green); color: #000; }
+  .btn-cyan { background: var(--cyan); color: #000; }
+  .btn-orange { background: var(--orange); color: #000; }
+
+  .output-box {
+    display: none; background: #000; color: var(--green);
+    border: var(--border); padding: 15px; font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    max-height: 220px; overflow-y: auto; word-break: break-all; white-space: pre-wrap;
+    box-shadow: var(--shadow-sm);
+  }
+  .output-box.show { display: block; animation: slideUp 0.3s ease; }
+
+  .log-text {
+    font-size: 11px; font-family: 'JetBrains Mono', monospace; color: #666;
+    margin-top: 5px; display: none; line-height: 1.6;
+    background: #f0f0e8; border-left: 3px solid var(--black); padding: 8px 10px;
+  }
+  .log-text.show { display: block; }
+
+  /* RESULT CARD (KEYGEN) */
+  .result-card {
+    display: none;
+    border: var(--border); padding: 16px; text-align: center;
+    box-shadow: var(--shadow); flex-direction: column; gap: 8px;
+    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .result-card.show { display: flex; }
+  @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  .result-tier { font-size: 10px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 2px; color: rgba(0,0,0,0.6); }
+  .result-label { font-size: 22px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .result-score { font-size: 12px; font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+  .result-key {
+    font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 700;
+    background: #000; color: var(--green); padding: 12px; border: 2px solid #000;
+    word-break: break-all; margin-top: 4px;
+  }
+
+  /* LOADING STATE */
+  .loading-box {
+    display: none; background: var(--cyan); border: var(--border); box-shadow: var(--shadow);
+    padding: 20px; text-align: center; font-family: 'JetBrains Mono', monospace;
+    font-weight: 700; font-size: 16px; color: #000; text-transform: uppercase;
+    letter-spacing: 2px; flex-direction: column; gap: 10px; justify-content: center; align-items: center;
+    animation: popIn 0.3s ease;
+  }
+  .loading-box.show { display: flex; }
+  .spinner {
+    width: 24px; height: 24px; border: 3px solid #000; border-top-color: transparent;
+    border-radius: 50%; animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { 100% { transform: rotate(360deg); } }
+
+  /* DASHBOARD GADGET INFO */
+  .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .dash-card {
+    background: var(--bg); border: 2.5px solid #000; padding: 12px; box-shadow: var(--shadow-sm);
+    display: flex; flex-direction: column; gap: 5px;
+  }
+  .dash-card.full { grid-column: span 2; }
+  .dash-label { font-size: 9px; font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+  .dash-value { font-size: 16px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: #000; word-break: break-word; }
+  .dash-value.small { font-size: 13px; }
+  .dash-card.cyan { background: var(--cyan); }
+  .dash-card.yellow { background: var(--yellow); }
+  .dash-card.pink { background: var(--pink); color: #fff; }
+  .dash-card.pink .dash-label, .dash-card.pink .dash-value { color: #fff; }
+  .dash-card.green { background: var(--green); }
+
+  /* FITUR TAMBAHAN DI MENU */
+  .menu-tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; }
+  .menu-tool-btn {
+    background: var(--white); border: 2.5px solid #000; box-shadow: var(--shadow-sm);
+    padding: 15px 10px; font-weight: 700; font-size: 12px; text-transform: uppercase;
+    cursor: pointer; transition: 0.1s; text-align: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  }
+  .menu-tool-btn:active { transform: translate(2px, 2px); box-shadow: none; }
+  .menu-tool-btn .icon { font-size: 24px; }
+  .menu-tool-btn.web2code { background: var(--yellow); }
+  .menu-tool-btn.html2web { background: var(--pink); color: #fff; }
+
+  /* PHONE MOCKUP UNTUK HTML TO WEB */
+  .phone-frame {
+    width: 100%; max-width: 320px; height: 480px;
+    background: #000; border-radius: 35px; border: 4px solid #000;
+    margin: 15px auto; position: relative; box-shadow: 8px 8px 0 rgba(0,0,0,0.15);
+    padding: 10px;
+  }
+  .phone-notch {
+    position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    width: 110px; height: 22px; background: #000;
+    border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; z-index: 10;
+  }
+  .phone-screen {
+    width: 100%; height: 100%; border: none; border-radius: 25px;
+    background: #fff; display: block; overflow: hidden;
+  }
+
+  /* BOTTOM NAVIGATION (DOCK IPHONE STYLE) */
+  .bottom-nav {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    width: calc(100% - 40px); max-width: 420px; /* Jarak kanan-kiri */
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px); /* Efek kaca ala iOS */
+    border: var(--border); border-radius: 24px; /* Agak gepeng/lonjong */
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 8px 10px; z-index: 9999;
+    box-shadow: var(--shadow);
+    transition: bottom 0.3s ease;
+  }
+  .nav-item {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    background: none; border: none; font-size: 9px; font-weight: 700;
+    text-transform: uppercase; color: #666; cursor: pointer;
+    font-family: 'Space Grotesk', sans-serif;
+    padding: 5px 15px;
+  }
+  .nav-item.active { color: var(--black); }
+  .nav-icon {
+    font-size: 20px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+    border: 2px solid transparent; border-radius: 10px; transition: 0.2s;
+  }
+  .nav-item.active .nav-icon {
+    background: var(--yellow); border: 2px solid #000; box-shadow: 2px 2px 0 #000;
+    transform: translate(-1px, -1px) scale(1.05); /* Sedikit membesar saat aktif */
+  }
+
+  /* TOAST */
+  .toast-notif {
+    position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--green); color: #000; padding: 12px 24px; font-weight: 700; font-size: 14px;
+    border: 3px solid #000; border-radius: 12px; box-shadow: 4px 4px 0 #000;
+    opacity: 0; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 100000;
+    pointer-events: none; display: flex; align-items: center; gap: 8px; max-width: 90vw;
+  }
+  .toast-notif.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .toast-notif.error { background: var(--pink); color: #FFF; }
+
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN SCREEN ================= -->
+<div class="login-overlay" id="loginScreen">
+  <div class="login-panel">
+    <div class="login-title">Z×ice lanz dulll</div>
+    <div class="panel-desc" style="text-align: center; margin-bottom: 10px;">Silakan login untuk mengakses tools.</div>
+    
+    <div class="input-group">
+      <label>Username</label>
+      <input type="text" id="loginUser" class="input-brutal" placeholder="Masukkan username..." autocapitalize="none">
+    </div>
+    
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="loginPass" class="input-brutal" placeholder="Masukkan password...">
+    </div>
+    
+    <button class="btn-action btn-cyan" onclick="doLogin()" style="margin-top: 10px;">🔐 Masuk</button>
+  </div>
+</div>
+<!-- =============================================== -->
+
+<div class="side-overlay" id="sideOverlay" onclick="toggleSideMenu()"></div>
+
+<!-- SIDEBAR -->
+<div class="side-menu" id="sideMenu">
+  <div class="side-title">
+    MENU <small>v5.6</small>
+    <button class="close-x" onclick="toggleSideMenu()">×</button>
+  </div>
+  
+  <div class="side-group-title">Main Tools</div>
+  <button class="side-btn active" data-tool="menu" onclick="openTool('menu')">
+    <span class="dot"></span> 📁 Menu
+  </button>
+  <button class="side-btn" data-tool="keygen" onclick="openTool('keygen')">
+    <span class="dot"></span> 🔑 Generate Key
+  </button>
+  <button class="side-btn" data-tool="valid" onclick="openTool('valid')">
+    <span class="dot"></span> ✅ Tes Valid Key
+  </button>
+  <button class="side-btn" data-tool="sfl" onclick="openTool('sfl')">
+    <span class="dot"></span> 🔗 SFL → MediaFire
+  </button>
+
+  <div class="side-foot">
+    Z×ice lanz dulll.<br>
+    <span style="color:var(--pink)">Public tools & bypass.</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="header">
+    <div class="hamburger" onclick="toggleSideMenu()">
+      <span></span><span></span><span></span>
+    </div>
+    <div>
+      <h1>Z×ice lanz dulll</h1>
+      <p>KEYGEN & BYPASS GATEWAY</p>
+    </div>
+    <div class="tag">v5.6</div>
+  </div>
+
+  <!-- HALAMAN: MENU (DASHBOARD) -->
+  <div class="main-page active" id="page-menu">
+    <div class="panel">
+      <div class="panel-title">📁 Dashboard <span class="badge">INFO</span></div>
+      
+      <div style="background: var(--cyan); border: 2.5px solid #000; padding: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; text-align: center; box-shadow: var(--shadow-sm); margin-bottom: 5px;">
+        🚀 FITUR UPDATE 5.6
+      </div>
+
+      <div class="dash-grid">
+        <div class="dash-card cyan full">
+          <div class="dash-label">Waktu Sekarang</div>
+          <div class="dash-value" id="dashTime">Memuat...</div>
+        </div>
+        
+        <div class="dash-card yellow">
+          <div class="dash-label">Baterai HP</div>
+          <div class="dash-value" id="dashBattery">Cek...</div>
+        </div>
+        
+        <div class="dash-card pink">
+          <div class="dash-label">IP Address</div>
+          <div class="dash-value small" id="dashIP">Cek...</div>
+        </div>
+
+        <div class="dash-card green full">
+          <div class="dash-label">Nama HP / Perangkat</div>
+          <div class="dash-value" id="dashDevice">Memuat...</div>
+        </div>
+      </div>
+
+      <!-- FITUR TAMBAHAN DI MENU -->
+      <div class="dash-label" style="margin-top: 15px; margin-bottom: -5px;">Extra Tools</div>
+      <div class="menu-tools-grid">
+        <button class="menu-tool-btn web2code" onclick="openTool('web2code')">
+          <span class="icon">🌐</span>
+          Web to Code
+        </button>
+        <button class="menu-tool-btn html2web" onclick="openTool('html2web')">
+          <span class="icon">💻</span>
+          HTML to Web
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- HALAMAN: WEB TO CODE -->
+  <div class="main-page" id="page-web2code">
+    <div class="panel">
+      <button class="close-page-btn" onclick="openTool('menu')">×</button>
+      <div class="panel-title">🌐 Web to Code <span class="badge">SCRAPER</span></div>
+      <div class="panel-desc">Ambil source code HTML dari sebuah URL website.</div>
+
+      <div class="input-group">
+        <label>URL WEBSITE</label>
+        <input type="url" id="webUrl" class="input-brutal" placeholder="https://example.com">
+      </div>
+
+      <button class="btn-action btn-yellow" id="btnWeb2Code" onclick="fetchWebCode()" style="background: var(--yellow); color: #000;">🌐 Ambil Kode</button>
+
+      <div class="output-box" id="webCodeResult" style="height: 300px; font-family: 'JetBrains Mono', monospace; font-size: 11px; white-space: pre;"></div>
+    </div>
+  </div>
+
+  <!-- HALAMAN: HTML TO WEB -->
+  <div class="main-page" id="page-html2web">
+    <div class="panel">
+      <button class="close-page-btn" onclick="openTool('menu')">×</button>
+      <div class="panel-title">💻 HTML to Web <span class="badge">SANDBOX</span></div>
+      <div class="panel-desc">Tulis atau paste kode HTML/CSS/JS dan lihat hasilnya langsung di layar HP.</div>
+
+      <div class="input-group">
+        <label>KODE HTML</label>
+        <textarea id="htmlInput" class="input-brutal" style="height: 120px; resize: vertical; font-size: 11px;" placeholder="<h1>Hello World</h1>" spellcheck="false" autocapitalize="none"></textarea>
+      </div>
+
+      <button class="btn-action btn-pink" onclick="renderHtml()">💻 Render Web</button>
+
+      <div class="input-group" style="margin-top: 10px;">
+        <label style="text-align: center;">PREVIEW DI LAYAR HP</label>
+        
+        <!-- MOCKUP HP -->
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <iframe id="htmlPreview" class="phone-screen"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HALAMAN: KEYGEN -->
+  <div class="main-page" id="page-keygen">
+    <div class="panel">
+      <button class="close-page-btn" onclick="openTool('menu')">×</button>
+      <div class="panel-title">🔑 Generate Key <span class="badge">SERVER API</span></div>
+      <div class="panel-desc">Masukkan prefix nama. Key akan disimpan permanen di database server.</div>
+
+      <div class="input-group">
+        <label>PREFIX / NAMA KEY</label>
+        <input type="text" id="keyInput" class="input-brutal" placeholder="isi nama key..." maxlength="16">
+      </div>
+
+      <button class="btn-action btn-cyan" id="btnGenKey" onclick="generateKey()">🔑 Generate Key</button>
+
+      <div class="loading-box" id="keyLoading">
+        <div class="spinner"></div>
+        <span>BYPASSING...</span>
+      </div>
+
+      <div class="result-card" id="keyResult">
+        <div class="result-tier" id="resultTier">tier</div>
+        <div class="result-label" id="resultLabel">label</div>
+        <div class="result-score" id="resultScore">0/100</div>
+        <div class="result-key" id="resultKeyVal"></div>
+      </div>
+
+      <button class="btn-action btn-green" id="btnCopyKey" style="display:none;" onclick="copyKey()">📋 Copy Key</button>
+    </div>
+  </div>
+
+  <!-- HALAMAN: TES VALID KEY -->
+  <div class="main-page" id="page-valid">
+    <div class="panel">
+      <button class="close-page-btn" onclick="openTool('menu')">×</button>
+      <div class="panel-title">✅ Tes Valid Key <span class="badge">SERVER API</span></div>
+      <div class="panel-desc">Paste key yang sudah di-generate untuk mengecek keasliannya di database server.</div>
+
+      <div class="input-group">
+        <label>KEY YANG MAU DICEK</label>
+        <input type="text" id="validInput" class="input-brutal" placeholder="cth: NAMA-XXXX-XXXX-XXXX">
+      </div>
+
+      <button class="btn-action btn-cyan" onclick="checkValidKey()">✅ Cek Validitas</button>
+
+      <div class="output-box" id="validResult"></div>
+    </div>
+  </div>
+
+  <!-- HALAMAN: SFL -->
+  <div class="main-page" id="page-sfl">
+    <div class="panel">
+      <button class="close-page-btn" onclick="openTool('menu')">×</button>
+      <div class="panel-title">🔗 SFL → MediaFire <span class="badge">BYPASS</span></div>
+      <div class="panel-desc">Tempel link Sfile (SFL). Tool akan ambil halaman dan cari link MediaFire di dalamnya.</div>
+
+      <div class="input-group">
+        <label>LINK SFL</label>
+        <input type="url" id="sflInput" class="input-brutal" placeholder="https://sfile.co/xxxxx">
+      </div>
+
+      <button class="btn-action btn-orange" id="btnSfl" onclick="bypassSfl()">🔗 Bypass Sekarang</button>
+
+      <div class="output-box" id="sflResult"></div>
+      <div class="log-text" id="sflLog"></div>
+    </div>
+  </div>
+
+  <!-- HALAMAN: SETTING -->
+  <div class="main-page" id="page-setting">
+    <div class="panel">
+      <button class="close-page-btn" onclick="openTool('menu')">×</button>
+      <div class="panel-title">⚙️ Setting <span class="badge">SYS</span></div>
+      <div class="panel-desc">Pengaturan preferensi tools.</div>
+
+      <div class="input-group" style="flex-direction: row; align-items: center; justify-content: space-between;">
+        <label style="margin-bottom: 0;">Auto Copy Key</label>
+        <input type="checkbox" id="autoCopy" style="width: 20px; height: 20px; accent-color: var(--cyan); border: var(--border); cursor: pointer;">
+      </div>
+      
+      <div style="height: 3px; background: repeating-linear-gradient(90deg, #000 0 6px, transparent 6px 12px); margin: 4px 0;"></div>
+      
+      <button class="btn-action btn-orange" onclick="clearStorage()">🗑️ Clear Cache / Storage</button>
+    </div>
+  </div>
+
+  <!-- HALAMAN: INFO APP -->
+  <div class="main-page" id="page-info">
+    <div class="panel">
+      <button class="close-page-btn" onclick="openTool('menu')">×</button>
+      <div class="panel-title">ℹ️ Info App <span class="badge">ABOUT</span></div>
+      <div class="panel-desc">
+        <strong>Z×ice lanz dulll</strong> (v5.6)<br><br>
+        Aplikasi web utility untuk generate public key, bypass link SFL ke MediaFire, dan tools pendukung lainnya.<br><br>
+        Full-Stack Serverless (Flask + Vercel + Turso DB).<br><br>
+        <em>Use wisely. Enjoy the genggong.</em>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM NAVIGATION (DOCK STYLE) -->
+<div class="bottom-nav">
+  <button class="nav-item active" data-tool="menu" onclick="openTool('menu')">
+    <div class="nav-icon">📁</div>
+    Menu
+  </button>
+  <button class="nav-item" data-tool="setting" onclick="openTool('setting')">
+    <div class="nav-icon">⚙️</div>
+    Setting
+  </button>
+  <button class="nav-item" data-tool="info" onclick="openTool('info')">
+    <div class="nav-icon">ℹ️</div>
+    Info
+  </button>
+</div>
+
+<div id="toastContainer"></div>
+
+<script>
+  let currentGeneratedKey = "";
+  const SERVER_URL = ""; 
+
+  // ==========================================
+  // FITUR: LOGIN
+  // ==========================================
+  function doLogin() {
+    const user = document.getElementById('loginUser').value.trim();
+    const pass = document.getElementById('loginPass').value;
+
+    if (user === "dulll genggong" && pass === "dulll brengsek") {
+      document.getElementById('loginScreen').classList.add('hidden');
+      localStorage.setItem('dulll_login', 'true');
+      showToast("Login Berhasil! Selamat datang.", false);
+    } else {
+      showToast("Username / Password Salah!", true);
+    }
+  }
+
+  // Cek status login pas web dimuat
+  document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('dulll_login') === 'true') {
+      document.getElementById('loginScreen').classList.add('hidden');
+    }
+  });
+
+  // Fitur: Saat ngetik, scroll ke atas biar input gak ketutupan keyboard/navbar
+  document.querySelectorAll('input, textarea').forEach(input => {
+    input.addEventListener('focus', () => {
+      setTimeout(() => {
+        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+    });
+  });
+
+  function toggleSideMenu() {
+    document.getElementById('sideMenu').classList.toggle('active');
+    document.getElementById('sideOverlay').classList.toggle('active');
+  }
+
+  function openTool(tool) {
+    if (document.getElementById('sideMenu').classList.contains('active')) {
+      toggleSideMenu();
+    }
+
+    document.querySelectorAll('.main-page').forEach(p => p.classList.remove('active'));
+    const targetPage = document.getElementById('page-' + tool);
+    if (targetPage) targetPage.classList.add('active');
+    
+    document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active'));
+    const targetBtn = document.querySelector(`.side-btn[data-tool="${tool}"]`);
+    if (targetBtn) targetBtn.classList.add('active');
+
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    const targetNav = document.querySelector(`.nav-item[data-tool="${tool}"]`);
+    if (targetNav) targetNav.classList.add('active');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function showToast(message, isError = false) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = 'toast-notif' + (isError ? ' error' : '');
+    const icon = isError ? '❌' : '✅';
+    toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 300);
+    }, 2500);
+  }
+
+  // ==========================================
+  // FITUR BARU: WEB TO CODE (SCRAPER)
+  // ==========================================
+  function fetchWebCode() {
+    const url = document.getElementById('webUrl').value.trim();
+    const out = document.getElementById('webCodeResult');
+    const btn = document.getElementById('btnWeb2Code');
+
+    if (!url) return showToast("Masukkan URL dulu!", true);
+    if (!/^https?:\/\//i.test(url)) return showToast("URL harus diawali http:// atau https://", true);
+
+    btn.disabled = true;
+    btn.innerText = "MENGAMBIL...";
+    out.classList.add('show');
+    out.innerText = "> Mengunduh source code dari: " + url + "...\n";
+
+    fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`)
+      .then(res => {
+        if (!res.ok) throw new Error("Gagal akses URL");
+        return res.text();
+      })
+      .then(text => {
+        const limit = 5000;
+        let displayText = text.substring(0, limit);
+        if (text.length > limit) {
+          displayText += `\n\n... [Terpotong. Total ${text.length} karakter] ...`;
+        }
+        out.innerText = displayText;
+        btn.disabled = false;
+        btn.innerText = "🌐 Ambil Kode";
+        showToast("Kode berhasil diambil!", false);
+      })
+      .catch(err => {
+        out.innerText = "Gagal mengambil kode:\n" + err.message;
+        btn.disabled = false;
+        btn.innerText = "🌐 Ambil Kode";
+        showToast("Gagal ambil kode", true);
+      });
+  }
+
+  // ==========================================
+  // FITUR BARU: HTML TO WEB (RENDER)
+  // ==========================================
+  function renderHtml() {
+    const code = document.getElementById('htmlInput').value;
+    const iframe = document.getElementById('htmlPreview');
+    iframe.srcdoc = code;
+    showToast("Berhasil di-render!", false);
+  }
+
+  // ==========================================
+  // DASHBOARD & KEYGEN
+  // ==========================================
+  function initDashboard() {
+    setInterval(() => {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('id-ID', { hour12: false });
+      const dateStr = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' });
+      document.getElementById('dashTime').innerText = `${timeStr} | ${dateStr}`;
+    }, 1000);
+
+    if (navigator.getBattery) {
+      navigator.getBattery().then(battery => {
+        function updateBattery() {
+          const level = Math.round(battery.level * 100);
+          const charging = battery.charging ? '⚡(Charging)' : '';
+          document.getElementById('dashBattery').innerText = `${level}% ${charging}`;
+        }
+        updateBattery();
+        battery.addEventListener('levelchange', updateBattery);
+        battery.addEventListener('chargingchange', updateBattery);
+      });
+    } else {
+      document.getElementById('dashBattery').innerText = "Tidak didukung";
+    }
+
+    fetch('https://api.ipify.org?format=json')
+      .then(res => res.json())
+      .then(data => document.getElementById('dashIP').innerText = data.ip)
+      .catch(() => document.getElementById('dashIP').innerText = "Gagal load IP");
+
+    const ua = navigator.userAgent;
+    let deviceName = "Unknown Device";
+    if (ua.indexOf("Android") > -1) {
+      const match = ua.match(/Android [\d.]+; (.*?)(?: Build|\))/);
+      deviceName = match && match[1] ? match[1] : "Android Device";
+    } else if (/iPhone|iPad|iPod/.test(ua)) {
+      deviceName = "Apple iPhone/iPad";
+    } else if (/Windows NT/.test(ua)) {
+      deviceName = "Windows PC";
+    } else if (/Macintosh/.test(ua)) {
+      deviceName = "MacBook / iMac";
+    } else if (/Linux/.test(ua)) {
+      deviceName = "Linux Device";
+    }
+    document.getElementById('dashDevice').innerText = deviceName;
+  }
+  document.addEventListener('DOMContentLoaded', initDashboard);
+
+  const RATINGS = [
+    { min: 0,  label: 'rujit ahk',       tier: 'jelek',         color: '#FF007F', text: '#fff' },
+    { min: 40, label: 'damn bro',        tier: 'aga mayan',     color: '#FF7A00', text: '#000' },
+    { min: 88, label: 'ajig naon iue',   tier: 'paling bagus',  color: '#00FF66', text: '#000' },
+  ];
+
+  function pickRating(score) {
+    let r = RATINGS[0];
+    for (const x of RATINGS) if (score >= x.min) r = x;
+    return r;
+  }
+
+  function scoreKey(prefix, blocks) {
+    const p = Math.min(prefix.length * 4, 25);
+    const u = new Set(blocks.join('')).size;      
+    const uScore = Math.min(u * 2, 40);
+    const l = Math.min(blocks.length * 10, 25);
+    const bonus = Math.random() * 10;
+    return Math.min(Math.round(p + uScore + l + bonus), 100);
+  }
+
+  function generateKey() {
+    const rawPrefix = document.getElementById('keyInput').value.trim().toUpperCase().replace(/\s+/g, '');
+    if (!rawPrefix) return showToast("Isi nama key dulu!", true);
+
+    const btn = document.getElementById('btnGenKey');
+    const card = document.getElementById('keyResult');
+    const btnCopy = document.getElementById('btnCopyKey');
+    const loading = document.getElementById('keyLoading');
+
+    btn.disabled = true;
+    btn.innerText = "MEMPROSES...";
+    card.classList.remove('show');
+    btnCopy.style.display = 'none';
+    loading.classList.add('show');
+
+    fetch(`${SERVER_URL}/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prefix: rawPrefix })
+    })
+    .then(res => res.json())
+    .then(data => {
+      loading.classList.remove('show');
+      if(data.status === 'success') {
+        const finalKey = data.key;
+        currentGeneratedKey = finalKey;
+
+        const score = scoreKey(rawPrefix, [finalKey.slice(-14, -10), finalKey.slice(-9, -5), finalKey.slice(-4)]);
+        const rating = pickRating(score);
+
+        document.getElementById('resultTier').innerText  = rating.tier;
+        document.getElementById('resultLabel').innerText = rating.label;
+        document.getElementById('resultLabel').style.color = rating.color;
+        document.getElementById('resultScore').innerText = score + '/100';
+        document.getElementById('resultKeyVal').innerText = finalKey;
+
+        card.style.background = rating.color;
+        card.style.color = rating.text;
+        card.classList.add('show');
+
+        btnCopy.style.display = 'block';
+        btn.disabled = false;
+        btn.innerText = "🔑 Generate Key";
+
+        const isAuto = document.getElementById('autoCopy')?.checked;
+        if(isAuto) copyKey();
+        else showToast("Key tersimpan di Server! Rating: " + rating.label, false);
+      } else {
+        throw new Error(data.message || "Gagal generate");
+      }
+    })
+    .catch(err => {
+      loading.classList.remove('show');
+      btn.disabled = false;
+      btn.innerText = "🔑 Generate Key";
+      showToast("Error Server: " + err.message, true);
+    });
+  }
+
+  function copyKey() {
+    if (!currentGeneratedKey) return showToast("Belum ada key.", true);
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(currentGeneratedKey)
+        .then(() => showToast("Key berhasil di-copy!", false))
+        .catch(() => fallbackCopy(currentGeneratedKey));
+    } else {
+      fallbackCopy(currentGeneratedKey);
+    }
+  }
+
+  function fallbackCopy(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.left = "-999999px";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand('copy');
+      showToast("Key berhasil di-copy!", false);
+    } catch (err) {
+      showToast("Gagal copy.", true);
+    }
+    textArea.remove();
+  }
+
+  function checkValidKey() {
+    const input = document.getElementById('validInput').value.trim().toUpperCase();
+    const out = document.getElementById('validResult');
+    
+    if (!input) return showToast("Masukkan key untuk dicek!", true);
+    
+    out.classList.add('show');
+    out.innerHTML = `<span style="color: var(--cyan)">Menghubungi database server...</span>`;
+
+    fetch(`${SERVER_URL}/validate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: input })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.valid) {
+        out.innerHTML = `<div style="color: var(--green); font-weight: bold; font-size: 16px; margin-bottom: 5px;">✅ KEY VALID</div>
+                         <span style="color: #fff;">Key terdaftar asli dari server Z×ice lanz dulll.</span>`;
+      } else {
+        out.innerHTML = `<div style="color: var(--pink); font-weight: bold; font-size: 16px; margin-bottom: 5px;">❌ KEY TIDAK VALID</div>
+                         <span style="color: #fff;">Key tidak ditemukan di database.</span>`;
+      }
+    })
+    .catch(err => {
+      out.innerHTML = `<span style="color: var(--pink)">Gagal konek ke server database.</span>`;
+    });
+  }
+
+  function clearStorage() {
+    localStorage.clear();
+    showToast("Cache & storage dibersihkan!", false);
+  }
+
+  async function bypassSfl() {
+    const url = document.getElementById('sflInput').value.trim();
+    const btn = document.getElementById('btnSfl');
+    const out = document.getElementById('sflResult');
+    const log = document.getElementById('sflLog');
+
+    if (!url) return showToast("Masukkan link SFL!", true);
+    if (!/^https?:\/\//i.test(url)) return showToast("Link harus diawali http:// atau https://", true);
+
+    btn.disabled = true;
+    btn.innerText = "BYPASSING...";
+    out.classList.remove('show');
+    log.classList.add('show');
+    log.innerHTML = `> Menghubungi server SFL...`;
+
+    try {
+      const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+      log.innerHTML += `<br>> Mengunduh halaman HTML...`;
+
+      const res = await fetch(proxy);
+      if (!res.ok) throw new Error("Target menolak koneksi");
+
+      const html = await res.text();
+      log.innerHTML += `<br>> Menganalisis kode...`;
+
+      const mediafireMatch = html.match(/(https?:\/\/[^"'\s]*mediafire\.com[^"'\s]*)/i);
+
+      if (mediafireMatch && mediafireMatch[1]) {
+        const directLink = mediafireMatch[1];
+        log.innerHTML += `<br>> [SUKSES] Link MediaFire ditemukan!`;
+        out.innerHTML = `
+          <div style="color: var(--green); font-weight: bold; margin-bottom: 8px;">✅ BYPASS BERHASIL</div>
+          <a href="${directLink}" target="_blank" rel="noopener" style="color: var(--cyan); word-break: break-all; text-decoration: underline;">${directLink}</a>
+        `;
+        out.classList.add('show');
+      } else {
+        throw new Error("Link MediaFire tidak ditemukan.");
+      }
+    } catch (e) {
+      log.innerHTML += `<br>> [GAGAL] ${e.message}`;
+      out.innerHTML = `<span style="color: var(--pink)">Bypass gagal. Kemungkinan: Cloudflare aktif, link invalid, atau proxy timeout.</span>`;
+      out.classList.add('show');
+    } finally {
+      btn.disabled = false;
+      btn.innerText = "🔗 Bypass Sekarang";
+    }
+  }
+</script>
+
+</body>
+</html>
