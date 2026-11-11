@@ -195,7 +195,8 @@
   .output-box {
     display: none; background: #000; color: var(--green);
     border: var(--border); padding: 15px; font-family: 'JetBrains Mono', monospace; font-size: 12px;
-    max-height: 220px; overflow-y: auto; word-break: break-all; white-space: pre-wrap;
+    max-height: 400px; /* Ditinggiin biar lega */
+    overflow-y: auto; word-break: break-all; white-space: pre-wrap;
     box-shadow: var(--shadow-sm);
   }
   .output-box.show { display: block; animation: slideUp 0.3s ease; }
@@ -356,7 +357,7 @@
 <!-- SIDEBAR -->
 <div class="side-menu" id="sideMenu">
   <div class="side-title">
-    MENU <small>v5.8</small>
+    MENU <small>v5.9</small>
     <button class="close-x" onclick="toggleSideMenu()">×</button>
   </div>
   
@@ -394,7 +395,7 @@
     <!-- Tombol Logout & Versi di Kanan Atas -->
     <div class="header-top-right">
       <button class="btn-logout" onclick="doLogout()">Keluar</button>
-      <div class="tag">v5.8</div>
+      <div class="tag">v5.9</div>
     </div>
 
   </div>
@@ -405,7 +406,7 @@
       <div class="panel-title">📁 Dashboard <span class="badge">INFO</span></div>
       
       <div style="background: var(--cyan); border: 2.5px solid #000; padding: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; text-align: center; box-shadow: var(--shadow-sm); margin-bottom: 5px;">
-        🚀 FITUR UPDATE 5.8
+        🚀 FITUR UPDATE 5.9
       </div>
 
       <div class="dash-grid">
@@ -451,7 +452,7 @@
     <div class="panel">
       <button class="close-page-btn" onclick="openTool('menu')">×</button>
       <div class="panel-title">🌐 Web to Code <span class="badge">SCRAPER</span></div>
-      <div class="panel-desc">Ambil source code HTML dari sebuah URL website.</div>
+      <div class="panel-desc">Ambil source code HTML dari sebuah URL website secara utuh tanpa batas.</div>
 
       <div class="input-group">
         <label>URL WEBSITE</label>
@@ -460,7 +461,7 @@
 
       <button class="btn-action" id="btnWeb2Code" onclick="fetchWebCode()" style="background: var(--yellow); color: #000;">🌐 Ambil Kode</button>
 
-      <div class="output-box" id="webCodeResult" style="height: 300px; font-family: 'JetBrains Mono', monospace; font-size: 11px; white-space: pre;"></div>
+      <div class="output-box" id="webCodeResult" style="height: 400px; font-family: 'JetBrains Mono', monospace; font-size: 11px; white-space: pre-wrap;"></div>
     </div>
   </div>
 
@@ -473,7 +474,7 @@
 
       <div class="input-group">
         <label>KODE HTML</label>
-        <textarea id="htmlInput" class="input-brutal" style="height: 120px; resize: vertical; font-size: 11px;" placeholder="<h1>Hello World</h1>" spellcheck="false" autocapitalize="none"></textarea>
+        <textarea id="htmlInput" class="input-brutal" style="height: 150px; resize: vertical; font-size: 11px;" placeholder="<h1>Hello World</h1>" spellcheck="false" autocapitalize="none"></textarea>
       </div>
 
       <button class="btn-action btn-pink" onclick="renderHtml()">💻 Render Web</button>
@@ -484,7 +485,7 @@
         <!-- MOCKUP HP -->
         <div class="phone-frame">
           <div class="phone-notch"></div>
-          <iframe id="htmlPreview" class="phone-screen"></iframe>
+          <iframe id="htmlPreview" class="phone-screen" src="about:blank"></iframe>
         </div>
       </div>
     </div>
@@ -581,7 +582,7 @@
       <button class="close-page-btn" onclick="openTool('menu')">×</button>
       <div class="panel-title">ℹ️ Info App <span class="badge">ABOUT</span></div>
       <div class="panel-desc">
-        <strong>Z×ice lanz dulll</strong> (v5.8)<br><br>
+        <strong>Z×ice lanz dulll</strong> (v5.9)<br><br>
         Aplikasi web utility untuk generate public key, bypass link SFL ke MediaFire, dan tools pendukung lainnya.<br><br>
         Full-Stack Serverless (Flask + Vercel + Turso DB).<br><br>
         <em>Use wisely. Enjoy the genggong.</em>
@@ -634,7 +635,7 @@
     document.getElementById('loginScreen').classList.remove('hidden');
     document.getElementById('loginUser').value = '';
     document.getElementById('loginPass').value = '';
-    openTool('menu'); // Balik ke halaman awal
+    openTool('menu'); 
     showToast("Berhasil Log Out", false);
   }
 
@@ -692,7 +693,7 @@
   }
 
   // ==========================================
-  // FITUR: WEB TO CODE (Tembak Backend)
+  // FITUR: WEB TO CODE (Tanpa Batas)
   // ==========================================
   function fetchWebCode() {
     const url = document.getElementById('webUrl').value.trim();
@@ -715,12 +716,8 @@
       .then(res => res.json())
       .then(data => {
         if(data.status === 'success') {
-          const limit = 5000;
-          let displayText = data.html.substring(0, limit);
-          if (data.html.length > limit) {
-            displayText += `\n\n... [Terpotong. Total ${data.html.length} karakter] ...`;
-          }
-          out.innerText = displayText;
+          // Nampilin semua teks tanpa dipotong (substring)
+          out.innerText = data.html;
           showToast("Kode berhasil diambil!", false);
         } else {
           throw new Error(data.message);
@@ -737,13 +734,23 @@
   }
 
   // ==========================================
-  // FITUR: HTML TO WEB (Render)
+  // FITUR: HTML TO WEB (Blob URL biar anti-stuck)
   // ==========================================
   function renderHtml() {
     const code = document.getElementById('htmlInput').value;
     const iframe = document.getElementById('htmlPreview');
-    iframe.srcdoc = code;
-    showToast("Berhasil di-render!", false);
+    
+    if(!code.trim()) return showToast("Kode HTML masih kosong!", true);
+
+    try {
+      // Pakai Blob URL, jauh lebih stabil & gak bikin browser freeze
+      const blob = new Blob([code], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      iframe.src = url;
+      showToast("Berhasil di-render!", false);
+    } catch (err) {
+      showToast("Gagal render: " + err.message, true);
+    }
   }
 
   // ==========================================
