@@ -192,10 +192,11 @@
   .btn-cyan { background: var(--cyan); color: #000; }
   .btn-orange { background: var(--orange); color: #000; }
 
+  /* KOTAK OUTPUT (Diubah jadi Putih biar kebaca) */
   .output-box {
-    display: none; background: #000; color: var(--green);
+    display: none; background: var(--white); color: var(--black);
     border: var(--border); padding: 15px; font-family: 'JetBrains Mono', monospace; font-size: 12px;
-    max-height: 400px; /* Ditinggiin biar lega */
+    max-height: 400px;
     overflow-y: auto; word-break: break-all; white-space: pre-wrap;
     box-shadow: var(--shadow-sm);
   }
@@ -269,6 +270,7 @@
   .menu-tool-btn .icon { font-size: 24px; }
   .menu-tool-btn.web2code { background: var(--yellow); }
   .menu-tool-btn.html2web { background: var(--pink); color: #fff; }
+  .menu-tool-btn.subs { background: var(--cyan); }
 
   /* PHONE MOCKUP UNTUK HTML TO WEB */
   .phone-frame {
@@ -357,7 +359,7 @@
 <!-- SIDEBAR -->
 <div class="side-menu" id="sideMenu">
   <div class="side-title">
-    MENU <small>v5.9</small>
+    MENU <small>v6.0</small>
     <button class="close-x" onclick="toggleSideMenu()">×</button>
   </div>
   
@@ -371,8 +373,13 @@
   <button class="side-btn" data-tool="valid" onclick="openTool('valid')">
     <span class="dot"></span> ✅ Tes Valid Key
   </button>
+  
+  <div class="side-group-title">Bypass Tools</div>
   <button class="side-btn" data-tool="sfl" onclick="openTool('sfl')">
-    <span class="dot"></span> 🔗 SFL → MediaFire
+    <span class="dot" style="background:var(--orange)"></span> 🔗 SFL → MediaFire
+  </button>
+  <button class="side-btn" data-tool="subs" onclick="openTool('subs')">
+    <span class="dot" style="background:var(--cyan)"></span> 🔓 Subs2Unlock
   </button>
 
   <div class="side-foot">
@@ -395,7 +402,7 @@
     <!-- Tombol Logout & Versi di Kanan Atas -->
     <div class="header-top-right">
       <button class="btn-logout" onclick="doLogout()">Keluar</button>
-      <div class="tag">v5.9</div>
+      <div class="tag">v6.0</div>
     </div>
 
   </div>
@@ -406,7 +413,7 @@
       <div class="panel-title">📁 Dashboard <span class="badge">INFO</span></div>
       
       <div style="background: var(--cyan); border: 2.5px solid #000; padding: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; text-align: center; box-shadow: var(--shadow-sm); margin-bottom: 5px;">
-        🚀 FITUR UPDATE 5.9
+        🚀 FITUR UPDATE 6.0
       </div>
 
       <div class="dash-grid">
@@ -459,7 +466,10 @@
         <input type="url" id="webUrl" class="input-brutal" placeholder="https://example.com">
       </div>
 
-      <button class="btn-action" id="btnWeb2Code" onclick="fetchWebCode()" style="background: var(--yellow); color: #000;">🌐 Ambil Kode</button>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn-action" id="btnWeb2Code" onclick="fetchWebCode()" style="background: var(--yellow); color: #000; flex: 1;">🌐 Ambil Kode</button>
+        <button class="btn-action btn-green" id="btnCopyWeb" onclick="copyWebCode()" style="display: none; flex: 1;">📋 Copy Kode</button>
+      </div>
 
       <div class="output-box" id="webCodeResult" style="height: 400px; font-family: 'JetBrains Mono', monospace; font-size: 11px; white-space: pre-wrap;"></div>
     </div>
@@ -535,7 +545,7 @@
 
       <button class="btn-action btn-cyan" onclick="checkValidKey()">✅ Cek Validitas</button>
 
-      <div class="output-box" id="validResult"></div>
+      <div class="output-box" id="validResult" style="background: #000; color: var(--green);"></div>
     </div>
   </div>
 
@@ -553,8 +563,27 @@
 
       <button class="btn-action btn-orange" id="btnSfl" onclick="bypassSfl()">🔗 Bypass Sekarang</button>
 
-      <div class="output-box" id="sflResult"></div>
+      <div class="output-box" id="sflResult" style="background: #000; color: var(--green);"></div>
       <div class="log-text" id="sflLog"></div>
+    </div>
+  </div>
+
+  <!-- HALAMAN: SUBS2UNLOCK -->
+  <div class="main-page" id="page-subs">
+    <div class="panel">
+      <button class="close-page-btn" onclick="openTool('menu')">×</button>
+      <div class="panel-title">🔓 Subs2Unlock <span class="badge">BYPASS</span></div>
+      <div class="panel-desc">Bypass link Subs2Unlock untuk mendapatkan link asli.</div>
+
+      <div class="input-group">
+        <label>LINK SUBS2UNLOCK</label>
+        <input type="url" id="subsInput" class="input-brutal" placeholder="https://subs2unlock.com/xxxxx">
+      </div>
+
+      <button class="btn-action btn-cyan" id="btnSubs" onclick="bypassSubs()">🔓 Bypass Subs</button>
+
+      <div class="output-box" id="subsResult" style="background: #000; color: var(--green);"></div>
+      <div class="log-text" id="subsLog"></div>
     </div>
   </div>
 
@@ -582,8 +611,8 @@
       <button class="close-page-btn" onclick="openTool('menu')">×</button>
       <div class="panel-title">ℹ️ Info App <span class="badge">ABOUT</span></div>
       <div class="panel-desc">
-        <strong>Z×ice lanz dulll</strong> (v5.9)<br><br>
-        Aplikasi web utility untuk generate public key, bypass link SFL ke MediaFire, dan tools pendukung lainnya.<br><br>
+        <strong>Z×ice lanz dulll</strong> (v6.0)<br><br>
+        Aplikasi web utility untuk generate public key, bypass link SFL ke MediaFire, Subs2Unlock, dan tools pendukung lainnya.<br><br>
         Full-Stack Serverless (Flask + Vercel + Turso DB).<br><br>
         <em>Use wisely. Enjoy the genggong.</em>
       </div>
@@ -612,6 +641,7 @@
 
 <script>
   let currentGeneratedKey = "";
+  let currentWebCode = "";
   const SERVER_URL = ""; 
 
   // ==========================================
@@ -693,18 +723,20 @@
   }
 
   // ==========================================
-  // FITUR: WEB TO CODE (Tanpa Batas)
+  // FITUR: WEB TO CODE (Tanpa Batas + Copy)
   // ==========================================
   function fetchWebCode() {
     const url = document.getElementById('webUrl').value.trim();
     const out = document.getElementById('webCodeResult');
     const btn = document.getElementById('btnWeb2Code');
+    const btnCopy = document.getElementById('btnCopyWeb');
 
     if (!url) return showToast("Masukkan URL dulu!", true);
     if (!/^https?:\/\//i.test(url)) return showToast("URL harus diawali http:// atau https://", true);
 
     btn.disabled = true;
     btn.innerText = "MENGAMBIL...";
+    btnCopy.style.display = 'none';
     out.classList.add('show');
     out.innerText = "> Mengunduh source code dari: " + url + "...\n";
 
@@ -716,8 +748,9 @@
       .then(res => res.json())
       .then(data => {
         if(data.status === 'success') {
-          // Nampilin semua teks tanpa dipotong (substring)
+          currentWebCode = data.html;
           out.innerText = data.html;
+          btnCopy.style.display = 'block'; // Munculin tombol copy
           showToast("Kode berhasil diambil!", false);
         } else {
           throw new Error(data.message);
@@ -733,6 +766,17 @@
       });
   }
 
+  function copyWebCode() {
+    if (!currentWebCode) return showToast("Belum ada kode untuk dicopy.", true);
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(currentWebCode)
+        .then(() => showToast("Kode berhasil di-copy!", false))
+        .catch(() => fallbackCopy(currentWebCode));
+    } else {
+      fallbackCopy(currentWebCode);
+    }
+  }
+
   // ==========================================
   // FITUR: HTML TO WEB (Blob URL biar anti-stuck)
   // ==========================================
@@ -743,7 +787,6 @@
     if(!code.trim()) return showToast("Kode HTML masih kosong!", true);
 
     try {
-      // Pakai Blob URL, jauh lebih stabil & gak bikin browser freeze
       const blob = new Blob([code], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
       iframe.src = url;
@@ -903,7 +946,7 @@
     textArea.select();
     try {
       document.execCommand('copy');
-      showToast("Key berhasil di-copy!", false);
+      showToast("Berhasil di-copy!", false);
     } catch (err) {
       showToast("Gagal copy.", true);
     }
@@ -944,6 +987,9 @@
     showToast("Cache & storage dibersihkan!", false);
   }
 
+  // ==========================================
+  // FUNGSI BYPASS (SFL & SUBS)
+  // ==========================================
   async function bypassSfl() {
     const url = document.getElementById('sflInput').value.trim();
     const btn = document.getElementById('btnSfl');
@@ -951,7 +997,6 @@
     const log = document.getElementById('sflLog');
 
     if (!url) return showToast("Masukkan link SFL!", true);
-    if (!/^https?:\/\//i.test(url)) return showToast("Link harus diawali http:// atau https://", true);
 
     btn.disabled = true;
     btn.innerText = "BYPASSING...";
@@ -981,11 +1026,55 @@
       }
     } catch (e) {
       log.innerHTML += `<br>> [GAGAL] ${e.message}`;
-      out.innerHTML = `<span style="color: var(--pink)">Bypass gagal. Kemungkinan: Cloudflare aktif, link invalid, atau server menolak koneksi.</span>`;
+      out.innerHTML = `<span style="color: var(--pink)">Bypass gagal. Server target memblokir request atau link tidak valid.</span>`;
       out.classList.add('show');
     } finally {
       btn.disabled = false;
       btn.innerText = "🔗 Bypass Sekarang";
+    }
+  }
+
+  async function bypassSubs() {
+    const url = document.getElementById('subsInput').value.trim();
+    const btn = document.getElementById('btnSubs');
+    const out = document.getElementById('subsResult');
+    const log = document.getElementById('subsLog');
+
+    if (!url) return showToast("Masukkan link Subs2Unlock!", true);
+
+    btn.disabled = true;
+    btn.innerText = "BYPASSING...";
+    out.classList.remove('show');
+    log.classList.add('show');
+    log.innerHTML = `> Menghubungi server Subs2Unlock...`;
+
+    try {
+      const res = await fetch(`${SERVER_URL}/api/subs2unlock`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: url })
+      });
+      const data = await res.json();
+
+      log.innerHTML += `<br>> Menganalisis kode...`;
+
+      if (data.status === 'success') {
+        log.innerHTML += `<br>> [SUKSES] Link ditemukan!`;
+        out.innerHTML = `
+          <div style="color: var(--green); font-weight: bold; margin-bottom: 8px;">✅ BYPASS BERHASIL</div>
+          <a href="${data.link}" target="_blank" rel="noopener" style="color: var(--cyan); word-break: break-all; text-decoration: underline;">${data.link}</a>
+        `;
+        out.classList.add('show');
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (e) {
+      log.innerHTML += `<br>> [GAGAL] ${e.message}`;
+      out.innerHTML = `<span style="color: var(--pink)">Bypass gagal. Web target memblokir request.</span>`;
+      out.classList.add('show');
+    } finally {
+      btn.disabled = false;
+      btn.innerText = "🔓 Bypass Subs";
     }
   }
 </script>
