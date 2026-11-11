@@ -30,7 +30,7 @@
     background-size: 22px 22px;
     color: var(--black);
     display: flex; justify-content: center;
-    min-height: 100vh; padding: 20px 20px 110px 20px; /* Padding bawah dilebarin buat dock */
+    min-height: 100vh; padding: 20px 20px 110px 20px;
     overflow-x: hidden;
   }
 
@@ -77,8 +77,20 @@
     display: inline-block; padding: 3px 10px; margin-top: 6px; letter-spacing: 1px;
     position: relative;
   }
-  .header .tag {
+  
+  /* HEADER TOP RIGHT (Logout & Versi) */
+  .header-top-right {
     position: absolute; top: 6px; right: 8px;
+    display: flex; gap: 5px; align-items: center; z-index: 10;
+  }
+  .btn-logout {
+    background: var(--black); color: var(--white); border: 2px solid #000;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700;
+    padding: 2px 6px; cursor: pointer; border-radius: 2px;
+    text-transform: uppercase; transition: 0.1s;
+  }
+  .btn-logout:active { transform: scale(0.95); }
+  .header .tag {
     font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700;
     background: var(--pink); color: #fff; padding: 2px 6px; border: 2px solid #000;
     transform: rotate(6deg);
@@ -277,10 +289,10 @@
   /* BOTTOM NAVIGATION (DOCK IPHONE STYLE) */
   .bottom-nav {
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-    width: calc(100% - 40px); max-width: 420px; /* Jarak kanan-kiri */
+    width: calc(100% - 40px); max-width: 420px;
     background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px); /* Efek kaca ala iOS */
-    border: var(--border); border-radius: 24px; /* Agak gepeng/lonjong */
+    backdrop-filter: blur(10px);
+    border: var(--border); border-radius: 24px;
     display: flex; justify-content: space-around; align-items: center;
     padding: 8px 10px; z-index: 9999;
     box-shadow: var(--shadow);
@@ -300,7 +312,7 @@
   }
   .nav-item.active .nav-icon {
     background: var(--yellow); border: 2px solid #000; box-shadow: 2px 2px 0 #000;
-    transform: translate(-1px, -1px) scale(1.05); /* Sedikit membesar saat aktif */
+    transform: translate(-1px, -1px) scale(1.05);
   }
 
   /* TOAST */
@@ -344,7 +356,7 @@
 <!-- SIDEBAR -->
 <div class="side-menu" id="sideMenu">
   <div class="side-title">
-    MENU <small>v5.6</small>
+    MENU <small>v5.8</small>
     <button class="close-x" onclick="toggleSideMenu()">×</button>
   </div>
   
@@ -378,7 +390,13 @@
       <h1>Z×ice lanz dulll</h1>
       <p>KEYGEN & BYPASS GATEWAY</p>
     </div>
-    <div class="tag">v5.6</div>
+    
+    <!-- Tombol Logout & Versi di Kanan Atas -->
+    <div class="header-top-right">
+      <button class="btn-logout" onclick="doLogout()">Keluar</button>
+      <div class="tag">v5.8</div>
+    </div>
+
   </div>
 
   <!-- HALAMAN: MENU (DASHBOARD) -->
@@ -387,7 +405,7 @@
       <div class="panel-title">📁 Dashboard <span class="badge">INFO</span></div>
       
       <div style="background: var(--cyan); border: 2.5px solid #000; padding: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; text-align: center; box-shadow: var(--shadow-sm); margin-bottom: 5px;">
-        🚀 FITUR UPDATE 5.6
+        🚀 FITUR UPDATE 5.8
       </div>
 
       <div class="dash-grid">
@@ -440,7 +458,7 @@
         <input type="url" id="webUrl" class="input-brutal" placeholder="https://example.com">
       </div>
 
-      <button class="btn-action btn-yellow" id="btnWeb2Code" onclick="fetchWebCode()" style="background: var(--yellow); color: #000;">🌐 Ambil Kode</button>
+      <button class="btn-action" id="btnWeb2Code" onclick="fetchWebCode()" style="background: var(--yellow); color: #000;">🌐 Ambil Kode</button>
 
       <div class="output-box" id="webCodeResult" style="height: 300px; font-family: 'JetBrains Mono', monospace; font-size: 11px; white-space: pre;"></div>
     </div>
@@ -563,7 +581,7 @@
       <button class="close-page-btn" onclick="openTool('menu')">×</button>
       <div class="panel-title">ℹ️ Info App <span class="badge">ABOUT</span></div>
       <div class="panel-desc">
-        <strong>Z×ice lanz dulll</strong> (v5.6)<br><br>
+        <strong>Z×ice lanz dulll</strong> (v5.8)<br><br>
         Aplikasi web utility untuk generate public key, bypass link SFL ke MediaFire, dan tools pendukung lainnya.<br><br>
         Full-Stack Serverless (Flask + Vercel + Turso DB).<br><br>
         <em>Use wisely. Enjoy the genggong.</em>
@@ -596,7 +614,7 @@
   const SERVER_URL = ""; 
 
   // ==========================================
-  // FITUR: LOGIN
+  // FITUR: LOGIN & LOGOUT
   // ==========================================
   function doLogin() {
     const user = document.getElementById('loginUser').value.trim();
@@ -611,14 +629,21 @@
     }
   }
 
-  // Cek status login pas web dimuat
+  function doLogout() {
+    localStorage.removeItem('dulll_login');
+    document.getElementById('loginScreen').classList.remove('hidden');
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+    openTool('menu'); // Balik ke halaman awal
+    showToast("Berhasil Log Out", false);
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     if (localStorage.getItem('dulll_login') === 'true') {
       document.getElementById('loginScreen').classList.add('hidden');
     }
   });
 
-  // Fitur: Saat ngetik, scroll ke atas biar input gak ketutupan keyboard/navbar
   document.querySelectorAll('input, textarea').forEach(input => {
     input.addEventListener('focus', () => {
       setTimeout(() => {
@@ -667,7 +692,7 @@
   }
 
   // ==========================================
-  // FITUR BARU: WEB TO CODE (SCRAPER)
+  // FITUR: WEB TO CODE (Tembak Backend)
   // ==========================================
   function fetchWebCode() {
     const url = document.getElementById('webUrl').value.trim();
@@ -682,32 +707,37 @@
     out.classList.add('show');
     out.innerText = "> Mengunduh source code dari: " + url + "...\n";
 
-    fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`)
-      .then(res => {
-        if (!res.ok) throw new Error("Gagal akses URL");
-        return res.text();
-      })
-      .then(text => {
-        const limit = 5000;
-        let displayText = text.substring(0, limit);
-        if (text.length > limit) {
-          displayText += `\n\n... [Terpotong. Total ${text.length} karakter] ...`;
+    fetch(`${SERVER_URL}/api/web_to_code`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: url })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if(data.status === 'success') {
+          const limit = 5000;
+          let displayText = data.html.substring(0, limit);
+          if (data.html.length > limit) {
+            displayText += `\n\n... [Terpotong. Total ${data.html.length} karakter] ...`;
+          }
+          out.innerText = displayText;
+          showToast("Kode berhasil diambil!", false);
+        } else {
+          throw new Error(data.message);
         }
-        out.innerText = displayText;
-        btn.disabled = false;
-        btn.innerText = "🌐 Ambil Kode";
-        showToast("Kode berhasil diambil!", false);
       })
       .catch(err => {
         out.innerText = "Gagal mengambil kode:\n" + err.message;
+        showToast("Gagal ambil kode", true);
+      })
+      .finally(() => {
         btn.disabled = false;
         btn.innerText = "🌐 Ambil Kode";
-        showToast("Gagal ambil kode", true);
       });
   }
 
   // ==========================================
-  // FITUR BARU: HTML TO WEB (RENDER)
+  // FITUR: HTML TO WEB (Render)
   // ==========================================
   function renderHtml() {
     const code = document.getElementById('htmlInput').value;
@@ -923,31 +953,28 @@
     log.innerHTML = `> Menghubungi server SFL...`;
 
     try {
-      const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-      log.innerHTML += `<br>> Mengunduh halaman HTML...`;
+      const res = await fetch(`${SERVER_URL}/api/sfl_bypass`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: url })
+      });
+      const data = await res.json();
 
-      const res = await fetch(proxy);
-      if (!res.ok) throw new Error("Target menolak koneksi");
-
-      const html = await res.text();
       log.innerHTML += `<br>> Menganalisis kode...`;
 
-      const mediafireMatch = html.match(/(https?:\/\/[^"'\s]*mediafire\.com[^"'\s]*)/i);
-
-      if (mediafireMatch && mediafireMatch[1]) {
-        const directLink = mediafireMatch[1];
+      if (data.status === 'success') {
         log.innerHTML += `<br>> [SUKSES] Link MediaFire ditemukan!`;
         out.innerHTML = `
           <div style="color: var(--green); font-weight: bold; margin-bottom: 8px;">✅ BYPASS BERHASIL</div>
-          <a href="${directLink}" target="_blank" rel="noopener" style="color: var(--cyan); word-break: break-all; text-decoration: underline;">${directLink}</a>
+          <a href="${data.link}" target="_blank" rel="noopener" style="color: var(--cyan); word-break: break-all; text-decoration: underline;">${data.link}</a>
         `;
         out.classList.add('show');
       } else {
-        throw new Error("Link MediaFire tidak ditemukan.");
+        throw new Error(data.message);
       }
     } catch (e) {
       log.innerHTML += `<br>> [GAGAL] ${e.message}`;
-      out.innerHTML = `<span style="color: var(--pink)">Bypass gagal. Kemungkinan: Cloudflare aktif, link invalid, atau proxy timeout.</span>`;
+      out.innerHTML = `<span style="color: var(--pink)">Bypass gagal. Kemungkinan: Cloudflare aktif, link invalid, atau server menolak koneksi.</span>`;
       out.classList.add('show');
     } finally {
       btn.disabled = false;
