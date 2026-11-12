@@ -3,6 +3,7 @@ from flask_cors import CORS
 import random
 import string
 import requests
+import cloudscraper
 import re
 
 app = Flask(__name__)
@@ -19,136 +20,76 @@ def _to_arg(v):
     return {"type": "text", "value": str(v)}
 
 def execute_query(sql, args=None):
-    headers = {
-        "Authorization": f"Bearer {TURSO_TOKEN}",
-        "Content-Type": "application/json"
-    }
+    headers = {"Authorization": f"Bearer {TURSO_TOKEN}", "Content-Type": "application/json"}
     formatted_args = [_to_arg(a) for a in args] if args else []
-    payload = {
-        "requests": [
-            {"type": "execute", "stmt": {"sql": sql, "args": formatted_args}},
-            {"type": "close"}
-        ]
-    }
+    payload = {"requests": [{"type": "execute", "stmt": {"sql": sql, "args": formatted_args}}, {"type": "close"}]}
     response = requests.post(f"{TURSO_URL}/v2/pipeline", headers=headers, json=payload)
     response.raise_for_status()
     return response.json()
 
 def init_db():
     try:
-        execute_query("""
-            CREATE TABLE IF NOT EXISTS valid_keys (
-                key TEXT PRIMARY KEY,
-                owner TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        """)
+        # Tabel API Keys
+        execute_query("CREATE TABLE IF NOT EXISTS api_keys (key TEXT PRIMARY KEY, owner TEXT, is_active INTEGER DEFAULT 1)")
     except Exception as e:
-        print(f"Gagal inisialisasi tabel: {e}")
+        print(f"DB Error: {e}")
 
 @app.route('/')
-def home():
-    return render_template('index.html')
+def home(): return render_template('index.html')
 
-@app.route('/generate', methods=['POST'])
-def generate_key():
-    data = request.json
-    prefix = data.get('prefix', '').upper().strip()
-    if not prefix:
-        return jsonify({"status": "error", "message": "Prefix kosong"}), 400
-
+# === ENDPOINT: GENERATE API KEY PUBLIK ===
+@app.route('/api/generate_key', methods=['POST'])
+def generate_api_key():
+    # Bikin key random format DULLL-XXXX-XXXX-XXXX
     chars = string.ascii_uppercase + string.digits
     blocks = [''.join(random.choices(chars, k=4)) for _ in range(3)]
-    final_key = f"{prefix}-{'-'.join(blocks)}"
+    new_key = f"DULLL-{'-'.join(blocks)}"
 
     try:
-        execute_query("INSERT INTO valid_keys (key, owner) VALUES (?, ?)", [final_key, "public"])
-        return jsonify({"status": "success", "key": final_key})
+        # Simpan ke database Turso
+        execute_query("INSERT INTO api_keys (key, owner) VALUES (?, ?)", [new_key, "Public"])
+        return jsonify({"status": "success", "api_key": new_key})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-@app.route('/validate', methods=['POST'])
-def validate_key():
-    data = request.json
-    key_input = data.get('key', '').strip()
-    if not key_input: return jsonify({"valid": False, "message": "Key kosong"}), 400
+# === ENDPOINT: SFL BYPASS (ANTI CLOUDFLARE) ===
+@app.route('/api/sfl_bypass', methods=['POST'])
+def sfl_bypass():
+    url = request.json.get('url')
+    if not url: return jsonify({"status": "error", "message": "URL Kosong"}), 400
 
     try:
-        result = execute_query("SELECT owner FROM valid_keys WHERE key = ?", [key_input])
-        rows = result['results'][0]['response']['result']['rows']
-        if rows:
-            return jsonify({"valid": True, "owner": rows[0][0]['value']})
-        return jsonify({"valid": False})
-    except Exception as e:
-        return jsonify({"valid": False, "error": str(e)}), 500
-
-# === FITUR: WEB TO CODE ===
-@app.route('/api/web_to_code', methods=['POST'])
-def web_to_code():
-    data = request.json
-    url = data.get('url')
-    if not url: return jsonify({"status": "error", "message": "URL kosong"}), 400
-    try:
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
-        res = requests.get(url, headers=headers, timeout=15)
-        return jsonify({"status": "success", "html": res.text})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
-
-# === FITUR: SFL & SUBS2UNLOCK BYPASS ===
-def universal_bypass(url):
-    try:
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.5',
-            'Referer': 'https://www.google.com/'
-        }
+        # Menggunakan cloudscraper untuk nembus Cloudflare
+        scraper = cloudscraper.create_scraper(
+            browser={'browser': 'chrome', 'platform': 'windows', 'mobile': False}
+        )
         
-        res = requests.get(url, headers=headers, timeout=15, allow_redirects=True)
+        # Tembak URL-nya
+        res = scraper.get(url, timeout=20, allow_redirects=True)
         
-        # Cek URL akhir
-        if 'mediafire.com' in res.url or 'drive.google.com' in res.url or 'mega.nz' in res.url:
-             return {"status": "success", "link": res.url}
+        # Jika URL akhir udah MediaFire
+        if 'mediafire.com' in res.url:
+             return jsonify({"status": "success", "link": res.url})
              
         html = res.text
         
-        # Kumpulan pola regex untuk cari link
+        # Kumpulan Regex buat nyari link MediaFire
         patterns = [
             r'(https?://[^"\'\s<>]*mediafire\.com[^"\'\s<>]*)',
-            r'(https?://[^"\'\s<>]*drive\.google\.com[^"\'\s<>]*)',
-            r'(https?://[^"\'\s<>]*mega\.nz[^"\'\s<>]*)',
-            r'window\.location(?:\.href)?\s*=\s*["\']([^"\']+)["\']',
-            r'<meta\s+http-equiv=["\']refresh["\']\s+content=["\']\d+;\s*url=([^"\']+)["\']',
-            r'<a[^>]+href=["\']([^"\']*(?:mediafire|drive|mega)[^"\']*)["\']'
+            r'window\.location(?:\.href)?\s*=\s*["\']([^"\']*mediafire\.com[^"\']*)["\']',
+            r'<meta\s+http-equiv=["\']refresh["\']\s+content=["\']\d+;\s*url=([^"\']*mediafire\.com[^"\']*)["\']'
         ]
         
         for pattern in patterns:
             match = re.search(pattern, html, re.IGNORECASE)
             if match:
                 link = match.group(1).replace('\\/', '/')
-                # Pastiin itu link beneran
-                if 'http' in link:
-                    return {"status": "success", "link": link}
+                return jsonify({"status": "success", "link": link})
                 
-        return {"status": "error", "message": "Link tidak ditemukan. Kemungkinan web pakai Cloudflare atau captcha."}
+        return jsonify({"status": "error", "message": "Link MediaFire tidak ditemukan di halaman. SFL mungkin pakai Turnstile (Captcha)."})
         
     except Exception as e:
-        return {"status": "error", "message": str(e)}
-
-@app.route('/api/sfl_bypass', methods=['POST'])
-def sfl_bypass():
-    url = request.json.get('url')
-    if not url: return jsonify({"status": "error", "message": "URL kosong"}), 400
-    result = universal_bypass(url)
-    return jsonify(result)
-
-@app.route('/api/subs2unlock', methods=['POST'])
-def subs2unlock():
-    url = request.json.get('url')
-    if not url: return jsonify({"status": "error", "message": "URL kosong"}), 400
-    result = universal_bypass(url)
-    return jsonify(result)
+        return jsonify({"status": "error", "message": f"Error: {str(e)}"}), 500
 
 init_db()
 
